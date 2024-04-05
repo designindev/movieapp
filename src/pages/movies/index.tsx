@@ -1,5 +1,5 @@
 import Header from "@/components/Header/header";
-import SimpleLayout from "@/components/Layouts/Layout";
+import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 import List from "@/components/List/List";
 

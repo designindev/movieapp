@@ -1,5 +1,5 @@
 interface InputProps {
-    type: 'email' | 'password' | 'text';
+    type: 'email' | 'password' | 'text' | 'date';
     placeholder?: string;
     value?: string | boolean;
     id: string;
@@ -7,9 +7,10 @@ interface InputProps {
     checked?: boolean;
     maxw?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    style?: React.CSSProperties;
 }
 
-const Input: React.FC<InputProps> = ({ type, placeholder, value, maxw, onChange, id, required }) => {
+const Input: React.FC<InputProps> = ({ type, placeholder, value, style, onChange, id, required }) => {
     return (
         <input
             type={type}
@@ -19,6 +20,7 @@ const Input: React.FC<InputProps> = ({ type, placeholder, value, maxw, onChange,
             className="rounded-[10px] py-[10px] px-4 bg-input text-white w-full"
             id={id}
             required={required}
+            style={style}
         />
     );
 };

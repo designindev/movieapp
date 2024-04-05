@@ -19,15 +19,15 @@ const Header: React.FC<HeaderProps> = ({ title, list, logout }) => {
     };
 
     return (
-        <div className="w-full flex items-center justify-between my-[120px]">
-            <div className="flex gap-2 items-center">
+        <div className="w-full flex items-center justify-between my-[80px] md:my-[120px]">
+            <div className="flex gap-2 items-bottom">
                 <h1 className="text-h2">{title}</h1>
                 {list && <Image 
                     src="/add.svg" 
                     alt="add" 
                     width="26" 
                     height="26"
-                    className="cursor-pointer transition-transform hover:scale-105"
+                    className="cursor-pointer transition-transform hover:scale-105 -mb-2"
                     onClick={handleListClick}
                 />}
             </div>

@@ -1,4 +1,4 @@
-import SimpleLayout from "@/components/Layouts/Layout"
+import SimpleLayout from "@/components/Layouts/MainLayout"
 
 const Loader = () => {
     return (

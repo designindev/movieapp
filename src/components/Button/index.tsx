@@ -5,9 +5,10 @@ interface ButtonProps {
     type?: 'button' | 'submit' | 'reset';
     view: 'primary' | 'cancel';
     onClick?: () => void;
+    style?: React.CSSProperties;
 }
 
-const Button: React.FC<ButtonProps> = ({ text, view, type, onClick }) => {
+const Button: React.FC<ButtonProps> = ({ text, view, type, onClick, style }) => {
     let buttonClasses = 'py-4 px-7 border text-regular rounded-[10px] text-white transition-transform hover:scale-105';
 
     switch (view) {
@@ -26,6 +27,7 @@ const Button: React.FC<ButtonProps> = ({ text, view, type, onClick }) => {
             type={type}
             className={buttonClasses}
             onClick={onClick}
+            style={style}
         >
             {text}
         </button>

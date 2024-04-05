@@ -1,5 +1,5 @@
 import Authorization from "@/components/Authorization";
-import Layout from "@/components/Layouts/Layout"
+import Layout from "@/components/Layouts/MainLayout"
 
 const SignIn = () => {
     return (

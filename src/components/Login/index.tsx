@@ -3,24 +3,32 @@ import Input from "@/components/Form/Input";
 import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Button/index";
 import { useRouter } from 'next/router';
+import { loginSchema } from '@/lib/services/validation/login';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const router = useRouter();
+    const [error, setError] = useState('');
   
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setEmail(e.target.value);
     const handlePasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value);
     const handleRememberMeChange = () => setRememberMe(!rememberMe);
   
-    const handleSubmit = (e: { preventDefault: () => void; }) => {
-      e.preventDefault();
-      console.log('Email:', email);
-      console.log('Password:', password);
-      console.log('Remember me:', rememberMe);
-      router.push('/movies');
-    };
+    const handleSubmit = async (e: { preventDefault: () => void; }) => {
+        e.preventDefault();
+  
+        try {
+          loginSchema.parse({ email, password });
+          console.log('Email:', email);
+          console.log('Password:', password);
+          console.log('Remember me:', rememberMe);
+          router.push('/movies');
+        } catch (err: any) {
+            setError(err.message);
+        }
+      };
 
     return (
         <form 
