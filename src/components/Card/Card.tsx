@@ -6,6 +6,7 @@ interface CardProps {
     title: string;
     year: string;
     onClick?: () => void;
+    imageUrl?: string; 
 }
 
 const Card: React.FC<CardProps> = ({ feature, title, year, onClick }) => {

@@ -2,42 +2,29 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Card from "@/components/Card/Card";
 import Pagination from "./Pagination";
-import Button from '../Button';
+import Button from "../Button";
+import { cardsData } from "@/lib/services/store";
 
 const List = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(8);
     const router = useRouter();
 
-    const cardsData = [
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-        { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-    ];
-
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = cardsData.slice(indexOfFirstItem, indexOfLastItem);
+
+    console.log(cardsData);
 
     const onPageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const handleCardClick = (movieId: string) => {
-        router.push(`/movies/${movieId}`);
+    const handleCardClick = (movieId: string, feature: string) => {
+        router.push({
+            pathname: `/movies/${movieId}`,
+            query: { imageUrl: feature },
+        });
     };
 
     return (
@@ -61,7 +48,7 @@ const List = () => {
                                 feature={cardData.feature}
                                 title={cardData.title}
                                 year={cardData.year}
-                                onClick={() => handleCardClick(index.toString())}
+                                onClick={() => handleCardClick(index.toString(), cardData.feature)}
                             />
                         ))}
                     </div>
