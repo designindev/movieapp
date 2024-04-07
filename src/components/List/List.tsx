@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Card from "@/components/Card/Card";
 import Pagination from "./Pagination";
 import Button from "../Button";
-import { cardsData } from "@/lib/services/store";
+import { cardsData } from "@/lib/services/api";
 
 const List = () => {
     const [currentPage, setCurrentPage] = useState(1);

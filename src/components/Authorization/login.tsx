@@ -3,7 +3,7 @@ import Input from "@/components/Form/Input";
 import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Button/index";
 import { useRouter } from 'next/router';
-import { loginSchema } from '@/lib/services/validation/login';
+import { userSchema } from '@/lib/schemas/userSchema';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -20,11 +20,11 @@ const Login = () => {
         e.preventDefault();
   
         try {
-          loginSchema.parse({ email, password });
-          console.log('Email:', email);
-          console.log('Password:', password);
-          console.log('Remember me:', rememberMe);
-          router.push('/movies');
+            userSchema.parse({ email, password });
+            console.log('Email:', email);
+            console.log('Password:', password);
+            console.log('Remember me:', rememberMe);
+            router.push('/movies');
         } catch (err: any) {
             setError(err.message);
         }

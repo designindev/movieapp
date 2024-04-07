@@ -1,4 +1,4 @@
-import Footer from "../Footer/footer";
+import Footer from "../Main/Footer/footer";
 
 export default function MainLayout({
   children,

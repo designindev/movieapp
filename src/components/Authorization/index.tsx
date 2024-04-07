@@ -1,4 +1,4 @@
-import Login from "@/components/Login/index";
+import Login from "@/components/Authorization/login";
 
 interface SignInProps {
     title: string;

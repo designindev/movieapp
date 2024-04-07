@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Button from "@/components/Button";
 import Input from "@/components/Form/Input";
-import Header from "@/components/Header/header";
+import Header from "@/components/Main/Header/header";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 

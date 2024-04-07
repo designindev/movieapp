@@ -1,18 +1,11 @@
-import { Inter } from "next/font/google";
-import IntroNavBar from "@/components/Intro/introNavBar/introNavBar";
-import Header from "@/components/Intro/header/header";
-import Hero from "@/components/Intro/hero/hero";
-
-const inter = Inter({ subsets: ["latin"] });
+import Loader from "@/components/Loader/Loader";
 
 export default function Home() {
   return (
     <main
-      className={`flex min-h-screen flex-col items-center justify-between p-20 ${inter.className}`}
+      className="flex min-h-screen w-full justify-center items-center bg-main"
     >
-      <Header />
-      <Hero />
-      <IntroNavBar />
+        <Loader />
     </main>
   );
 }
