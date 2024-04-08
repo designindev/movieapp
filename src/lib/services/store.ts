@@ -7,10 +7,12 @@ const useStoreData = (): moviesSchema[] => {
   const fetchedData = useFetchData();
 
   useEffect(() => {
-    if (Array.isArray(fetchedData) && fetchedData.length > 0) {
-        setData(fetchedData);
-      }
-  }, [fetchedData]);
+    const intData = fetchedData();
+    
+    // if (Array.isArray(fetchedData) && fetchedData.length > 0) {
+    //     setData(fetchedData);
+    //   }
+  }, []);
 
   return data;
 };
