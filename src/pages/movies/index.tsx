@@ -6,7 +6,6 @@ import useStoreData from "@/lib/services/store";
 
 const Movies = () => {
     const data = useStoreData();
-    console.log(data);
 
     return (
         <SimpleLayout>
@@ -16,7 +15,7 @@ const Movies = () => {
                     list={true}
                     logout={true}
                 />
-                <List />
+                <List data={data} />
             </Wrapper>
         </SimpleLayout>
     );

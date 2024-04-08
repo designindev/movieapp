@@ -3,35 +3,32 @@ import { useRouter } from 'next/router';
 import Card from "@/components/Card/Card";
 import Pagination from "./Pagination";
 import Button from "../Button";
-import { cardsData } from "@/lib/services/api";
-// import useStoreData from "@/lib/services/store";
 
-const List = () => {
+const List = ({ data }: { data: any[] }) => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(8);
     const router = useRouter();
 
-    // const moviesData = useStoreData();
-    // console.log(moviesData);
+    console.log(data);
 
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = cardsData.slice(indexOfFirstItem, indexOfLastItem);
+    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
 
     const onPageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    const handleCardClick = (movieId: string, feature: string) => {
+    const handleCardClick = (movieId: string, feature: string, title: string) => {
         router.push({
             pathname: `/movies/${movieId}`,
-            query: { imageUrl: feature },
+            query: { imageUrl: feature, title: title },
         });
     };
 
     return (
         <>
-          {cardsData.length === 0 ? (
+          {data.length === 0 ? (
                 <div className="w-full h-full flex flex-col gap-10 items-center">
                     <h2 className="text-h2">Your movie list is empty</h2>
                     <Button
@@ -46,16 +43,16 @@ const List = () => {
                         {currentItems.map((cardData, index) => (
                             <Card 
                                 key={index}
-                                id={index.toString()}
+                                id={cardData.movieId}
                                 feature={cardData.feature}
                                 title={cardData.title}
                                 year={cardData.year}
-                                onClick={() => handleCardClick(index.toString(), cardData.feature)}
+                                onClick={() => handleCardClick(cardData.movieId, cardData.feature, cardData.title)}
                             />
                         ))}
                     </div>
                     <Pagination 
-                        totalItems={cardsData.length}
+                        totalItems={data.length}
                         itemsPerPage={itemsPerPage}
                         currentPage={currentPage}
                         onPageChange={onPageChange}

@@ -6,6 +6,8 @@ import Input from "@/components/Form/Input";
 import Header from "@/components/Main/Header/header";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
+import { useCrud, Item } from '@/lib/services/hooks/CRUD';
+import generateID from "@/lib/utils/generateId";
 
 const EditMovie = () => {
     
@@ -13,12 +15,17 @@ const EditMovie = () => {
     const [year, setYear] = useState('');
     const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const { updateItem } = useCrud();
 
     useEffect(() => {
         if (router.query.imageUrl) {
           setSelectedImage(router.query.imageUrl as string);
         }
-      }, [router.query.imageUrl]);
+
+        if (router.query.title) {
+            setTitle(router.query.title as string);
+        }
+      }, [router.query]);
 
     console.log(selectedImage);
 
@@ -30,15 +37,23 @@ const EditMovie = () => {
         setYear(e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const movieData = {
+        const movieId = generateID(10);
+        const movieData: Item = {
+            movieId: movieId,
             title: title,
             year: year,
-            image: selectedImage,
+            feature: selectedImage || "",
         };
         console.log('Movie Data:', movieData);
-        router.push('/movies');
+        
+        try {
+            await updateItem(router.query.id as string, movieData);
+            router.push('/movies');
+        } catch (error) {
+            console.error('Error updating item:', error);
+        }
     };
 
     const CancelClick = () => {
@@ -57,7 +72,7 @@ const EditMovie = () => {
         <SimpleLayout>
             <Wrapper>
                 <Header
-                    title="Edit movie"
+                    title={`Edit ${title}`}
                 />
                 <form 
                     className="w-full flex flex-col-reverse lg:flex-row justify-between items-start gap-6"
@@ -107,7 +122,7 @@ const EditMovie = () => {
                                 onChange={handleTitleChange}
                             />
                             <Input
-                                type="date"
+                                type="text"
                                 placeholder="Publishing year"
                                 id="year"
                                 required={true}
