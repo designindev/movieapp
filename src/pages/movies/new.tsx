@@ -7,11 +7,23 @@ import Header from "@/components/Main/Header/header";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 
+import { useCrud, Item } from '@/lib/services/hooks/CRUD'; 
+
 const AddMovie = () => {
 
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
     const router = useRouter();
+    const { addItem } = useCrud();
+
+    function generateRandomString(length: number) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let result = '';
+        for (let i = 0; i < length; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        return result;
+    }
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -21,14 +33,18 @@ const AddMovie = () => {
         setYear(e.target.value);
     };
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const movieData = {
+        const movieId = generateRandomString(10);
+        const newItem: Item = {
+            movieId: movieId,
             title: title,
             year: year,
-            image: image,
+            feature: image?.name || "",
         };
-        console.log('Movie Data:', movieData);
+        await addItem(newItem);
+        await addItem(newItem);
+        console.log('Movie Data:', newItem);
         router.push('/movies');
     };
 

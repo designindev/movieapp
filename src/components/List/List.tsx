@@ -4,17 +4,19 @@ import Card from "@/components/Card/Card";
 import Pagination from "./Pagination";
 import Button from "../Button";
 import { cardsData } from "@/lib/services/api";
+// import useStoreData from "@/lib/services/store";
 
 const List = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(8);
     const router = useRouter();
 
+    // const moviesData = useStoreData();
+    // console.log(moviesData);
+
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = cardsData.slice(indexOfFirstItem, indexOfLastItem);
-
-    console.log(cardsData);
 
     const onPageChange = (page: number) => {
         setCurrentPage(page);

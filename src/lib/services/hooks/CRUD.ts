@@ -1,24 +1,11 @@
 import { useState } from 'react';
-// import AWS from 'aws-sdk';
-
-// const dynamoDB = new AWS.DynamoDB({
-//     endpoint: process.env.DYNAMODB_ENDPOINT,
-//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-//     tableName: process.env.AWS_TABLE_NAME,
-// });
-
-const dynamoDB = ({
-    endpoint: process.env.DYNAMODB_ENDPOINT,
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-    tableName: process.env.AWS_TABLE_NAME,
-});
+import { db, tableName } from '@/lib/utils/db';
 
 export interface Item {
-    id: string;
-    name: string;
-    description: string;
+    movieId: string;
+    feature: string;
+    title: string;
+    year: string;
 }
 
 export interface UseCrudResult {
@@ -28,22 +15,21 @@ export interface UseCrudResult {
     deleteItem: (id: string) => Promise<void>;
 }
 
-const useCrud = (): UseCrudResult => {
+export const useCrud = (): UseCrudResult => {
     const [items, setItems] = useState<Item[]>([]);
 
     const addItem = async (item: Item): Promise<void> => {
         try {
-            const params = {
-                TableName: dynamoDB.tableName,
+            await db.putItem({
+                TableName: tableName,
                 Item: {
-                    id: { S: item.id },
-                    name: { S: item.name },
-                    description: { S: item.description },
+                    'movieId': {S: item.movieId},
+                    'feature': { S: item.feature },
+                    'title': { S: item.title },
+                    'year': { S: item.year },
                 },
-            };
-
-            // await dynamoDB.putItem(params).promise();
-
+            }).promise();
+    
             setItems((prevItems) => [...prevItems, item]);
         } catch (error) {
             console.error('Error adding item:', error);
@@ -52,26 +38,26 @@ const useCrud = (): UseCrudResult => {
 
     const updateItem = async (id: string, newItem: Item): Promise<void> => {
         try {
-            const params = {
-                TableName: dynamoDB.tableName,
+            await db.updateItem({
+                TableName: tableName,
                 Key: {
                     id: { S: id },
                 },
-                UpdateExpression: 'SET #name = :name, #description = :description',
+                UpdateExpression: 'SET feature = :feature, #title = :title, #year = :year',
                 ExpressionAttributeNames: {
-                    '#name': 'name',
-                    '#description': 'description',
+                    '#title': 'title',
+                    '#year': 'year',
                 },
                 ExpressionAttributeValues: {
-                    ':name': { S: newItem.name },
-                    ':description': { S: newItem.description },
+                    ':feature': { S: newItem.feature },
+                    ':title': { S: newItem.title },
+                    ':year': { S: newItem.year },
                 },
                 ReturnValues: 'UPDATED_NEW',
-            };
-            // await dynamoDB.updateItem(params).promise();
+            }).promise();
 
             setItems((prevItems) =>
-                prevItems.map((item) => (item.id === id ? newItem : item))
+                prevItems.map((item) => (item.feature === id ? newItem : item))
             );
         } catch (error) {
             console.error('Error updating item:', error);
@@ -80,16 +66,15 @@ const useCrud = (): UseCrudResult => {
 
     const deleteItem = async (id: string): Promise<void> => {
         try {
-            const params = {
-                TableName: dynamoDB.tableName,
+            await db.deleteItem({
+                TableName: tableName,
                 Key: {
                     id: { S: id },
                 },
-            };
-            // await dynamoDB.deleteItem(params).promise();
+            }).promise();
 
             setItems((prevItems) =>
-                prevItems.filter((item) => item.id !== id)
+                prevItems.filter((item) => item.feature !== id)
             );
         } catch (error) {
             console.error('Error deleting item:', error);

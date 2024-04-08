@@ -16,3 +16,4 @@ const useStoreData = (): moviesSchema[] => {
 };
 
 export default useStoreData;
+
