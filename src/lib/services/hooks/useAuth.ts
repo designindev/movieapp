@@ -20,7 +20,7 @@ const useAuth = () => {
         } catch (error) {
             router.push('/signin');
         }
-    }, []);
+    }, [router]);
 
     return null;
 };

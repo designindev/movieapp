@@ -1,7 +1,14 @@
 import { useState } from 'react';
-import AWS from 'aws-sdk';
+// import AWS from 'aws-sdk';
 
-const dynamoDB = new AWS.DynamoDB({
+// const dynamoDB = new AWS.DynamoDB({
+//     endpoint: process.env.DYNAMODB_ENDPOINT,
+//     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+//     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+//     tableName: process.env.AWS_TABLE_NAME,
+// });
+
+const dynamoDB = ({
     endpoint: process.env.DYNAMODB_ENDPOINT,
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -35,7 +42,7 @@ const useCrud = (): UseCrudResult => {
                 },
             };
 
-            await dynamoDB.putItem(params).promise();
+            // await dynamoDB.putItem(params).promise();
 
             setItems((prevItems) => [...prevItems, item]);
         } catch (error) {
@@ -61,7 +68,7 @@ const useCrud = (): UseCrudResult => {
                 },
                 ReturnValues: 'UPDATED_NEW',
             };
-            await dynamoDB.updateItem(params).promise();
+            // await dynamoDB.updateItem(params).promise();
 
             setItems((prevItems) =>
                 prevItems.map((item) => (item.id === id ? newItem : item))
@@ -79,7 +86,7 @@ const useCrud = (): UseCrudResult => {
                     id: { S: id },
                 },
             };
-            await dynamoDB.deleteItem(params).promise();
+            // await dynamoDB.deleteItem(params).promise();
 
             setItems((prevItems) =>
                 prevItems.filter((item) => item.id !== id)
