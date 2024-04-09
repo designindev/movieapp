@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { userSchema, User } from '@/lib/schemas/userSchema';
-import { getUserFromLocalStorage } from '@/lib/utils/getUserFromLocal';
+import { getUserFromLocalStorage } from '@/lib/utils/setUserDataLocal';
 
 const useAuth = () => {
     const router = useRouter();

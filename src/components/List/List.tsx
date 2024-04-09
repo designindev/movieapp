@@ -9,8 +9,6 @@ const List = ({ data }: { data: any[] }) => {
     const [itemsPerPage] = useState(8);
     const router = useRouter();
 
-    console.log(data);
-
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
@@ -19,11 +17,8 @@ const List = ({ data }: { data: any[] }) => {
         setCurrentPage(page);
     };
 
-    const handleCardClick = (movieId: string, feature: string, title: string) => {
-        router.push({
-            pathname: `/movies/${movieId}`,
-            query: { imageUrl: feature, title: title },
-        });
+    const handleCardClick = (movieId: string) => {
+        router.push(`/movies/${movieId}`);
     };
 
     return (
@@ -47,7 +42,7 @@ const List = ({ data }: { data: any[] }) => {
                                 feature={cardData.feature}
                                 title={cardData.title}
                                 year={cardData.year}
-                                onClick={() => handleCardClick(cardData.movieId, cardData.feature, cardData.title)}
+                                onClick={() => handleCardClick(cardData.movieId)}
                             />
                         ))}
                     </div>

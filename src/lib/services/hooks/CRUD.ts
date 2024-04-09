@@ -41,7 +41,7 @@ export const useCrud = (): UseCrudResult => {
             await db.updateItem({
                 TableName: tableName,
                 Key: {
-                    id: { S: id },
+                    movieId: { S: id },
                 },
                 UpdateExpression: 'SET feature = :feature, #title = :title, #year = :year',
                 ExpressionAttributeNames: {
