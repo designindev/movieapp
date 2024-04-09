@@ -11,22 +11,3 @@ export default function handler(
 ) {
   res.status(200).json({ name: "John Doe" });
 }
-
-export const cardsData = [
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 25.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 24.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-  { feature: "/Rectangle 23.png", title: "movie", year: "2021" },
-];

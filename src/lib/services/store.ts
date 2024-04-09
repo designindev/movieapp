@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import useFetchData from './hooks/useFetch';
 import { moviesSchema } from '@/lib/schemas/movieSchema';
 

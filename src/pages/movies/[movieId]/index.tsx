@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
 import Button from "@/components/Button";
@@ -7,27 +7,27 @@ import Header from "@/components/Main/Header/header";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 import { useCrud, Item } from '@/lib/services/hooks/CRUD';
-import generateID from "@/lib/utils/generateId";
+import useStoreData from "@/lib/services/store";
 
 const EditMovie = () => {
-    
+    const router = useRouter();
+    const [movie, setMovie] = useState<Item | null>(null);
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
-    const router = useRouter();
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const data = useStoreData();
     const { updateItem } = useCrud();
 
     useEffect(() => {
-        if (router.query.imageUrl) {
-          setSelectedImage(router.query.imageUrl as string);
+        const movieId = router.query.movieId as string;
+        const foundMovie = data.find(movie => movie.movieId === movieId);
+        if (foundMovie) {
+            setMovie(foundMovie);
+            setTitle(foundMovie.title);
+            setYear(foundMovie.year);
+            setSelectedImage(foundMovie.feature);
         }
-
-        if (router.query.title) {
-            setTitle(router.query.title as string);
-        }
-      }, [router.query]);
-
-    console.log(selectedImage);
+    }, [router.query.movieId, data]);
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -37,24 +37,27 @@ const EditMovie = () => {
         setYear(e.target.value);
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {       
         e.preventDefault();
-        const movieId = generateID(10);
+        if (!movie) {
+            console.error('Movie is null');
+            return;
+        }
+    
         const movieData: Item = {
-            movieId: movieId,
+            movieId: movie.movieId,
             title: title,
             year: year,
             feature: selectedImage || "",
         };
-        console.log('Movie Data:', movieData);
         
         try {
-            await updateItem(router.query.id as string, movieData);
+            await updateItem(movieData.movieId, movieData);
             router.push('/movies');
         } catch (error) {
             console.error('Error updating item:', error);
         }
-    };
+    };    
 
     const CancelClick = () => {
         router.push('/movies');
@@ -66,13 +69,15 @@ const EditMovie = () => {
           const imageUrl = URL.createObjectURL(files[0]);
           setSelectedImage(imageUrl);
         }
-      };
+    };
+
+    if (!movie) return null;
 
     return (
         <SimpleLayout>
             <Wrapper>
                 <Header
-                    title={`Edit ${title}`}
+                    title={`Edit ${movie.title}`}
                 />
                 <form 
                     className="w-full flex flex-col-reverse lg:flex-row justify-between items-start gap-6"
@@ -96,9 +101,8 @@ const EditMovie = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
                                     </svg>
                                 </button>
-                                
                             </div>
-                            ) : (
+                        ) : (
                             <div className="flex flex-col gap-2 items-center">
                                 <Image src="/drop.svg" alt="Drop other image here" width="16" height="16" />
                                 Drop other image here
@@ -119,6 +123,7 @@ const EditMovie = () => {
                                 placeholder="Title"
                                 id="title"
                                 required={true}
+                                value={title}
                                 onChange={handleTitleChange}
                             />
                             <Input
@@ -126,6 +131,7 @@ const EditMovie = () => {
                                 placeholder="Publishing year"
                                 id="year"
                                 required={true}
+                                value={year}
                                 onChange={handleYearChange}
                                 style={{ maxWidth: '241px' }}
                             />
