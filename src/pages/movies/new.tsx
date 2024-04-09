@@ -34,7 +34,6 @@ const AddMovie = () => {
             feature: image?.name || "",
         };
         await addItem(newItem);
-        console.log('Movie Data:', newItem);
         router.push('/movies');
     };
 

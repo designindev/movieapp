@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import Image from "next/image";
 import { useRouter } from "next/router";
 
@@ -15,12 +16,14 @@ const Header: React.FC<HeaderProps> = ({ title, list, logout }) => {
     };
 
     const handleLogoutClick = () => {
+        Cookies.remove('rememberedEmail');
+        Cookies.remove('rememberedPassword');
         router.push('/signin');
     };
 
     return (
         <div className="w-full flex items-center justify-between my-[80px] md:my-[120px]">
-            <div className="flex gap-2 items-bottom">
+            <div className="flex gap-2 items-bottom flex-col md:flex-row">
                 <h1 className="text-h2">{title}</h1>
                 {list && <Image 
                     src="/add.svg" 
