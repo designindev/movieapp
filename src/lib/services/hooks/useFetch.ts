@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { db } from "@/lib/utils/db";
+import { db, tableName } from "@/lib/utils/db";
 
 const useFetchData = () => {
   const [data, setData] = useState<any[]>([]);
   useEffect(() => {
-    db.scan({ TableName: 'Movies' }, (err: any, fetchedData: any) => {
+    db.scan({ TableName: tableName }, (err: any, fetchedData: any) => {
       if (err) {
         console.error('Error fetching data:', err);
       } else {
