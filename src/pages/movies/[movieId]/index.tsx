@@ -79,7 +79,7 @@ const EditMovie = () => {
     if (!movie) return null;
 
     function CancelClick(): void {
-        throw new Error('Function not implemented.');
+        router.push('/movies');
     }
 
     return (
