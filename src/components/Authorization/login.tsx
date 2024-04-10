@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Cookies from 'js-cookie';
 import Input from "@/components/Form/Input";
 import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Button/index";
@@ -14,16 +15,34 @@ const Login = () => {
   
     const handleEmailChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setEmail(e.target.value);
     const handlePasswordChange = (e: { target: { value: React.SetStateAction<string>; }; }) => setPassword(e.target.value);
-    const handleRememberMeChange = () => setRememberMe(!rememberMe);
+    const handleRememberMeChange = () => {
+      setRememberMe(!rememberMe);
+    };
+    useEffect(() => {
+      if (rememberMe) {
+        Cookies.set('rememberedEmail', email);
+        Cookies.set('rememberedPassword', password);
+      } else {
+        Cookies.remove('rememberedEmail');
+        Cookies.remove('rememberedPassword');
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [rememberMe]);
+    useEffect(() => {
+      const rememberedEmail = Cookies.get('rememberedEmail');
+      const rememberedPassword = Cookies.get('rememberedPassword');
+      if (rememberedEmail && rememberedPassword) {
+          setEmail(rememberedEmail);
+          setPassword(rememberedPassword);
+          setRememberMe(true);
+      }
+    }, []);
   
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
   
         try {
             userSchema.parse({ email, password });
-            console.log('Email:', email);
-            console.log('Password:', password);
-            console.log('Remember me:', rememberMe);
             router.push('/movies');
         } catch (err: any) {
             setError(err.message);
@@ -59,7 +78,7 @@ const Login = () => {
                 <Checkbox
                     id="rememberMe"
                     required={false}
-                    checked={false}
+                    checked={rememberMe}
                     label="Remember me"
                     onChange={handleRememberMeChange}
                 />

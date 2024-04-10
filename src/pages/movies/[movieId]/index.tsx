@@ -8,15 +8,32 @@ import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 import { useCrud, Item } from '@/lib/services/hooks/CRUD';
 import useStoreData from "@/lib/services/store";
+import EditModal from "@/components/modal";
+
+
 
 const EditMovie = () => {
+  
     const router = useRouter();
+    const [showModal, setShowModal] = useState(false);
     const [movie, setMovie] = useState<Item | null>(null);
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
     const [selectedImage, setSelectedImage] = useState<string | null>(null);
     const data = useStoreData();
     const { updateItem } = useCrud();
+    const [link, setLink] = useState<string>('');
+    const openModal = () => setShowModal(true);
+    const closeModal = () => {
+      setShowModal(false);
+      setLink('');
+    };
+
+    const handleAcceptModal = (text: string) => {
+      setLink(text);
+      setSelectedImage(text);
+      closeModal();
+    };
 
     useEffect(() => {
         const movieId = router.query.movieId as string;
@@ -63,14 +80,6 @@ const EditMovie = () => {
         router.push('/movies');
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-          const imageUrl = URL.createObjectURL(files[0]);
-          setSelectedImage(imageUrl);
-        }
-    };
-
     if (!movie) return null;
 
     return (
@@ -83,7 +92,10 @@ const EditMovie = () => {
                     className="w-full flex flex-col-reverse lg:flex-row justify-between items-start gap-6"
                     onSubmit={handleSubmit}
                 >
-                    <label htmlFor="image" className="border-2 bg-input rounded-[10px] border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
+                    <label 
+                      onClick={openModal}
+                      htmlFor="image"
+                      className="border-2 bg-input rounded-[10px] border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
                         {selectedImage ? (
                             <div className='w-full h-full relative'>
                                 <Image
@@ -108,13 +120,6 @@ const EditMovie = () => {
                                 Drop other image here
                             </div>
                         )}
-                        <input 
-                            type="file" 
-                            id="image" 
-                            accept="image/*" 
-                            style={{ display: 'none' }} 
-                            onChange={handleImageChange} 
-                        />
                     </label>
                     <div className="flex flex-col gap-6 md:gap-16 w-full md:max-w-[362px]">
                         <div className="flex flex-col gap-6">
@@ -153,6 +158,7 @@ const EditMovie = () => {
                         </div>
                     </div>
                 </form>
+                <EditModal isOpen={showModal} onClose={closeModal} onAccept={handleAcceptModal} />
             </Wrapper>
         </SimpleLayout>
     );
