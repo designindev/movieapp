@@ -94,7 +94,7 @@ const EditMovie = () => {
                 >
                     <label htmlFor="image" className="border-2 bg-input rounded-[10px] relative border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
                         <Image
-                            src={currentImage}
+                            src={currentImage || ""}
                             alt="Selected Image"
                             width="473"
                             height="504"

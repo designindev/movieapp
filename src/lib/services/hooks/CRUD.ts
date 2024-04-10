@@ -11,7 +11,7 @@ export interface Item {
 export interface UseCrudResult {
     items: Item[];
     addItem: (item: Item, file: File) => Promise<void>;
-    updateItem: (id: string, newItem: Item, file: File) => Promise<void>;
+    updateItem: (id: string, newItem: Item, file?: File) => Promise<void>;
     deleteItem: (id: string) => Promise<void>;
 }
 
