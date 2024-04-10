@@ -5,6 +5,7 @@ import Checkbox from "@/components/Form/Checkbox";
 import Button from "@/components/Button/index";
 import { useRouter } from 'next/router';
 import { userSchema } from '@/lib/schemas/userSchema';
+import useAuth from '../../lib/services/hooks/useAuth';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -18,6 +19,8 @@ const Login = () => {
     const handleRememberMeChange = () => {
       setRememberMe(!rememberMe);
     };
+    const isAuthenticated = useAuth(email, password);
+
     useEffect(() => {
       if (rememberMe) {
         Cookies.set('rememberedEmail', email);
@@ -40,13 +43,13 @@ const Login = () => {
   
     const handleSubmit = async (e: { preventDefault: () => void; }) => {
         e.preventDefault();
-  
-        try {
-            userSchema.parse({ email, password });
-            router.push('/movies');
-        } catch (err: any) {
-            setError(err.message);
-        }
+        console.log('auth', isAuthenticated)
+          if (isAuthenticated) {
+              router.push('/movies');
+          } else {
+              setError('Invalid email or password');
+              router.push('/signin');
+          }
       };
 
     return (
@@ -83,6 +86,7 @@ const Login = () => {
                     onChange={handleRememberMeChange}
                 />
             </div>
+            {error && <p className="text-red-500">{error}</p>}
             <Button 
                 type="submit"
                 view={"primary"}

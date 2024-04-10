@@ -1,11 +1,10 @@
 import Loader from "@/components/Loader/Loader";
+import SimpleLayout from "@/components/Layouts/MainLayout";
 
 export default function Home() {
   return (
-    <main
-      className="flex min-h-screen w-full justify-center items-center bg-main"
-    >
+    <SimpleLayout>
         <Loader />
-    </main>
+    </SimpleLayout>
   );
 }

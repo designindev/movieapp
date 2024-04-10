@@ -51,6 +51,26 @@ const AddMovie = () => {
         await addItem(newItem, image);
         router.push('/movies');
     };
+
+    const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+      e.preventDefault();
+      e.currentTarget.classList.add('shadow-[0_0px_21px_-5px_rgba(255,255,255)]');
+    };
+    
+    const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
+        e.preventDefault();
+        e.currentTarget.classList.remove('shadow-[0_0px_21px_-5px_rgba(255,255,255)]');
+    };
+
+    const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
+      e.preventDefault();
+      const files = e.dataTransfer.files;
+      if (files && files.length > 0) {
+          const file = files[0];
+          setImage(file);
+      }
+      e.currentTarget.classList.remove('shadow-[0_0px_21px_-5px_rgba(255,255,255)]');
+    };
     
 
     const CancelClick = () => {
@@ -67,7 +87,13 @@ const AddMovie = () => {
                     className="w-full flex flex-col-reverse lg:flex-row justify-between items-start gap-6"
                     onSubmit={handleSubmit}
                 >
-                    <label htmlFor="image" className="border-2 bg-input rounded-[10px] border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
+                    <label
+                      htmlFor="image"
+                      className="transition-shadow duration-200 border-2 bg-input rounded-[10px] border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer"
+                      onDragOver={handleDragOver}
+                      onDragLeave={handleDragLeave}
+                      onDrop={handleDrop}
+                      >
                         {image ? (
                             <Image  src={URL.createObjectURL(image)} alt="Selected Image" width="473" height="504" className="w-full h-full object-cover rounded-[10px]" />
                         ) : (

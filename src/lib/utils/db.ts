@@ -1,5 +1,6 @@
 import AWS from 'aws-sdk';
 export const tableName = "Movies";
+export const tableUser = "Users";
 export const bucketName = "moviesbucket7"
 
 export const db = new AWS.DynamoDB({
