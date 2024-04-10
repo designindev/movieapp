@@ -20,7 +20,7 @@ const Card: React.FC<CardProps> = ({ feature, title, year, onClick }) => {
                 width={266}
                 height={400}
                 alt={title}
-                className="rounded-xl h-[400px] w-[100%] lg:w-[266px] sm:w-[100%]"
+                className="rounded-xl h-[400px] w-[100%] lg:w-[266px] sm:w-[100%] object-cover"
             />
             <div className="flex flex-col gap-2 px-2">
                 <h2 className="text-title capitalize">{title}</h2>

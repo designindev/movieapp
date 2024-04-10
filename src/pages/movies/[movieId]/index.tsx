@@ -8,32 +8,16 @@ import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 import { useCrud, Item } from '@/lib/services/hooks/CRUD';
 import useStoreData from "@/lib/services/store";
-import EditModal from "@/components/modal";
-
-
 
 const EditMovie = () => {
-  
     const router = useRouter();
-    const [showModal, setShowModal] = useState(false);
     const [movie, setMovie] = useState<Item | null>(null);
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
-    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const [currentImage, setCurrentImage] = useState<string | null>(null);
     const data = useStoreData();
     const { updateItem } = useCrud();
-    const [link, setLink] = useState<string>('');
-    const openModal = () => setShowModal(true);
-    const closeModal = () => {
-      setShowModal(false);
-      setLink('');
-    };
-
-    const handleAcceptModal = (text: string) => {
-      setLink(text);
-      setSelectedImage(text);
-      closeModal();
-    };
 
     useEffect(() => {
         const movieId = router.query.movieId as string;
@@ -42,7 +26,7 @@ const EditMovie = () => {
             setMovie(foundMovie);
             setTitle(foundMovie.title);
             setYear(foundMovie.year);
-            setSelectedImage(foundMovie.feature);
+            setCurrentImage(foundMovie.feature);
         }
     }, [router.query.movieId, data]);
 
@@ -54,6 +38,13 @@ const EditMovie = () => {
         setYear(e.target.value);
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setSelectedImage(e.target.files[0]);
+            setCurrentImage(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {       
         e.preventDefault();
         if (!movie) {
@@ -61,26 +52,35 @@ const EditMovie = () => {
             return;
         }
     
-        const movieData: Item = {
-            movieId: movie.movieId,
-            title: title,
-            year: year,
-            feature: selectedImage || "",
-        };
-        
         try {
-            await updateItem(movieData.movieId, movieData);
+            if (selectedImage) {
+                const updatedMovieData: Item = {
+                    ...movie,
+                    title,
+                    year,
+                    feature: selectedImage.name,
+                };
+                await updateItem(movie.movieId, updatedMovieData, selectedImage);
+            } else {
+                const updatedMovieData: Item = {
+                    ...movie,
+                    title,
+                    year,
+                };
+                await updateItem(movie.movieId, updatedMovieData);
+            }
+            
             router.push('/movies');
         } catch (error) {
             console.error('Error updating item:', error);
         }
-    };    
-
-    const CancelClick = () => {
-        router.push('/movies');
     };
 
     if (!movie) return null;
+
+    function CancelClick(): void {
+        throw new Error('Function not implemented.');
+    }
 
     return (
         <SimpleLayout>
@@ -92,34 +92,29 @@ const EditMovie = () => {
                     className="w-full flex flex-col-reverse lg:flex-row justify-between items-start gap-6"
                     onSubmit={handleSubmit}
                 >
-                    <label 
-                      onClick={openModal}
-                      htmlFor="image"
-                      className="border-2 bg-input rounded-[10px] border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
-                        {selectedImage ? (
-                            <div className='w-full h-full relative'>
-                                <Image
-                                    src={selectedImage}
-                                    alt="Selected Image"
-                                    width="473"
-                                    height="504"
-                                    className="w-full h-full object-cover rounded-[10px]"
-                                />
-                                <button 
-                                    type="button"
-                                    className="absolute top-4 left-4 shadow-lg p-3 flex items-center justify-center rounded-full bg-card transition-transform hover:scale-105"
-                                >
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                    </svg>
-                                </button>
-                            </div>
-                        ) : (
-                            <div className="flex flex-col gap-2 items-center">
-                                <Image src="/drop.svg" alt="Drop other image here" width="16" height="16" />
-                                Drop other image here
-                            </div>
-                        )}
+                    <label htmlFor="image" className="border-2 bg-input rounded-[10px] relative border-white border-dashed w-full md:max-w-[473px] h-[504px] flex justify-center items-center cursor-pointer">
+                        <Image
+                            src={currentImage}
+                            alt="Selected Image"
+                            width="473"
+                            height="504"
+                            className="w-full h-full object-cover rounded-[10px]"
+                        />
+                        <input 
+                            type="file"
+                            id="image"
+                            className="hidden"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                        />
+                        <button 
+                            type="button"
+                            className="absolute top-4 left-4 shadow-lg p-3 flex items-center justify-center rounded-full bg-card transition-transform hover:scale-105"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                            </svg>
+                        </button>
                     </label>
                     <div className="flex flex-col gap-6 md:gap-16 w-full md:max-w-[362px]">
                         <div className="flex flex-col gap-6">
@@ -158,7 +153,6 @@ const EditMovie = () => {
                         </div>
                     </div>
                 </form>
-                <EditModal isOpen={showModal} onClose={closeModal} onAccept={handleAcceptModal} />
             </Wrapper>
         </SimpleLayout>
     );
