@@ -135,7 +135,6 @@ const EditMovie = () => {
                             onChange={handleImageChange}
                         />
                         <button
-                            onClick={() => document.getElementById('image').click()} 
                             type="button"
                             className="absolute top-4 left-4 shadow-lg p-3 flex items-center justify-center rounded-full bg-card transition-transform hover:scale-105"
                         >
