@@ -7,14 +7,17 @@ import Header from "@/components/Main/Header/header";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
 import generateID from "@/lib/utils/generateId";
-import { useCrud, Item } from '@/lib/services/hooks/CRUD'; 
+import { useCrud, Item } from '@/lib/services/hooks/CRUD';
 
 const AddMovie = () => {
 
     const [title, setTitle] = useState('');
     const [year, setYear] = useState('');
+    const [image, setImage] = useState<File | null>(null);
     const router = useRouter();
     const { addItem } = useCrud();
+
+    console.log(image)
 
     const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setTitle(e.target.value);
@@ -24,8 +27,19 @@ const AddMovie = () => {
         setYear(e.target.value);
     };
 
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const files = e.target.files;
+        if (files && files.length > 0) {
+            setImage(files[0]); 
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!image) {
+            console.error('No file selected');
+            return;
+        }
         const movieId = generateID(10);
         const newItem: Item = {
             movieId: movieId,
@@ -33,21 +47,14 @@ const AddMovie = () => {
             year: year,
             feature: image?.name || "",
         };
-        await addItem(newItem);
+    
+        await addItem(newItem, image);
         router.push('/movies');
     };
+    
 
     const CancelClick = () => {
         router.push('/movies');
-    };
-
-    const [image, setImage] = useState<File | null>(null);
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const files = e.target.files;
-        if (files && files.length > 0) {
-            setImage(files[0]);
-        }
     };
 
     return (

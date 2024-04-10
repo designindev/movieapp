@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { db, tableName } from '@/lib/utils/db';
+import { db, tableName, s3, bucketName } from '@/lib/utils/db';
 
 export interface Item {
     movieId: string;
@@ -10,16 +10,25 @@ export interface Item {
 
 export interface UseCrudResult {
     items: Item[];
-    addItem: (item: Item) => Promise<void>;
-    updateItem: (id: string, newItem: Item) => Promise<void>;
+    addItem: (item: Item, file: File) => Promise<void>;
+    updateItem: (id: string, newItem: Item, file?: File) => Promise<void>;
     deleteItem: (id: string) => Promise<void>;
 }
 
 export const useCrud = (): UseCrudResult => {
     const [items, setItems] = useState<Item[]>([]);
 
-    const addItem = async (item: Item): Promise<void> => {
+    const addItem = async (item: Item, file: File): Promise<void> => {
         try {
+            const uploadParams = {
+                Bucket: bucketName,
+                Key: file.name,
+                Body: file,
+                ContentType: file.type,
+            };
+            const uploadData = await s3.upload(uploadParams).promise();
+            item.feature = uploadData.Location;
+    
             await db.putItem({
                 TableName: tableName,
                 Item: {
@@ -35,9 +44,20 @@ export const useCrud = (): UseCrudResult => {
             console.error('Error adding item:', error);
         }
     };
-
-    const updateItem = async (id: string, newItem: Item): Promise<void> => {
+    
+    const updateItem = async (id: string, newItem: Item, file?: File): Promise<void> => {
         try {
+            if (file) {
+                const uploadParams = {
+                    Bucket: bucketName,
+                    Key: file.name,
+                    Body: file,
+                    ContentType: file.type,
+                };
+                const uploadData = await s3.upload(uploadParams).promise();
+                newItem.feature = uploadData.Location;
+            }
+    
             await db.updateItem({
                 TableName: tableName,
                 Key: {
@@ -55,15 +75,15 @@ export const useCrud = (): UseCrudResult => {
                 },
                 ReturnValues: 'UPDATED_NEW',
             }).promise();
-
+    
             setItems((prevItems) =>
-                prevItems.map((item) => (item.feature === id ? newItem : item))
+                prevItems.map((item) => (item.movieId === id ? newItem : item))
             );
         } catch (error) {
             console.error('Error updating item:', error);
         }
     };
-
+    
     const deleteItem = async (id: string): Promise<void> => {
         try {
             await db.deleteItem({
