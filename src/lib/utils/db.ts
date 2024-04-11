@@ -25,10 +25,3 @@ export const generatePresignedUrl = (bucketName: string, key: string): string =>
 
     return s3.getSignedUrl('getObject', params);
 };
-
-// const dynamoDB = new AWS.DynamoDB({
-//   region: 'eu-north-1',
-//   endpoint: process.env.DYNAMODB_ENDPOINT,
-//   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-//   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-// });
