@@ -103,6 +103,13 @@ const EditMovie = () => {
       e.currentTarget.classList.remove('shadow-[0_0px_21px_-5px_rgba(255,255,255)]');
     };
 
+    const handleField = (id: string) => {
+        const input = document.getElementById(id);
+        if (input) {
+            input.click();
+        }
+    }
+
     return (
         <SimpleLayout>
             <Wrapper>
@@ -136,6 +143,7 @@ const EditMovie = () => {
                         />
                         <button
                             type="button"
+                            onClick={() => handleField('image')}
                             className="absolute top-4 left-4 shadow-lg p-3 flex items-center justify-center rounded-full bg-card transition-transform hover:scale-105"
                         >
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 22 26" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
