@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import Cookies from 'js-cookie';
 import { useRouter } from "next/router";
-import Footer from "../components/Main/Footer/footer";
 import Loader from "@/components/Loader/Loader";
 import SimpleLayout from "@/components/Layouts/MainLayout";
 import Wrapper from "@/components/Layouts/Wrapper";
