@@ -6,14 +6,14 @@ export const bucketName = "moviesbucket7"
 export const db = new AWS.DynamoDB({
     region: 'eu-north-1',
     endpoint: 'https://dynamodb.eu-north-1.amazonaws.com',
-    accessKeyId: 'AKIA6ODUZHNS7LHUKZ3F',
-    secretAccessKey: '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',
+    accessKeyId: 'AKIA6ODUZHNS56A5KBP6',
+    secretAccessKey: '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',
 });
 
 export const s3 = new AWS.S3({
     region: 'eu-north-1',
-    accessKeyId: 'AKIA6ODUZHNS7LHUKZ3F',
-    secretAccessKey: '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',
+    accessKeyId: 'AKIA6ODUZHNS56A5KBP6',
+    secretAccessKey: '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',
 });
 
 export const generatePresignedUrl = (bucketName: string, key: string): string => {
